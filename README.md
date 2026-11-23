@@ -55,6 +55,8 @@
 - **결과(21:0x~22:23, 윈도 시계가 22:05에 약 51분 맞춰짐): 78B 하나 · B1 → 그래픽 카드 과부하 3분(평균 224W·최대 237W·61°C·x16) 통과 + 재현 도구 60판(model_check 1,080번) 한 번도 안 꺼짐.** CPU 최대 104%, 남은 램 최저 4.6GB, PCIe 내내 x16, WHEA 0. → **램 하나를 B1에 두면 안정.** 램 둘(A1 사용)은 무엇을 해도 꺼짐.
 - 새 CPU·보드·램 구매는 사장님이 보류(11-23). 조사 결과는 PC 쪽 기억 파일에 있음(9950X3D 조합 약 283만~303만 원, DDR5 값 폭등).
 - 참고: 바이오스 3202 기본값 뒤로 전체 부하 때 CPU 성능%가 약 116→106(기본 전력 제한으로 보임, 과열 아님).
+- 22:25~ 전체 과부하 시험 15분(GPU Cycles 렌더 2개 약 215W + CPU 계산 6개 + 재현 도구 6개 + 램·디스크) 진행 중, 22:30까지 이상 없음.
+- 사장님 결정(22:3x): **CPU 전력 제한도 풀고 '모든 부품 최대' 시험.** 바이오스(Delete → F7 → Ai Tweaker): ASUS MultiCore Enhancement → Enabled(없으면 Auto 그대로), Internal CPU Power Management 안의 Long Duration Package Power Limit 4095 · Short Duration Package Power Limit 4095 · Package Power Time Window 127(최댓값). VCCSA 1.15·DRAM 1.25는 그대로. F10 저장. 그 뒤 PC 쪽 세션이 GPU 340W(PyTorch 행렬 곱)+CPU+램+디스크 동시 15분 시험.
 
 ## 다음 순서 (전압으로 안 고쳐지면)
 1. A1 슬롯 먼지·휜 핀 확인, 바람으로 청소.
