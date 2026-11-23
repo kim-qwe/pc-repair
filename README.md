@@ -57,6 +57,10 @@
 - 참고: 바이오스 3202 기본값 뒤로 전체 부하 때 CPU 성능%가 약 116→106(기본 전력 제한으로 보임, 과열 아님).
 - 22:25~ 전체 과부하 시험 15분(GPU Cycles 렌더 2개 약 215W + CPU 계산 6개 + 재현 도구 6개 + 램·디스크) 진행 중, 22:30까지 이상 없음.
 - 사장님 결정(22:3x): **CPU 전력 제한도 풀고 '모든 부품 최대' 시험.** 바이오스(Delete → F7 → Ai Tweaker): ASUS MultiCore Enhancement → Enabled(없으면 Auto 그대로), Internal CPU Power Management 안의 Long Duration Package Power Limit 4095 · Short Duration Package Power Limit 4095 · Package Power Time Window 127(최댓값). VCCSA 1.15·DRAM 1.25는 그대로. F10 저장. 그 뒤 PC 쪽 세션이 GPU 340W(PyTorch 행렬 곱)+CPU+램+디스크 동시 15분 시험.
+- **결과(22:25~22:52): 전체 과부하(GPU 렌더 2개 약 215W + CPU 계산 6개 + 재현 도구 6개, 램·디스크) 약 27분 꺼짐 0.**
+- **사장님 결정(22:5x): CPU 전력 제한 풀기와 GPU 340W 최대 시험은 하지 않음("나중에 필요하면"). 이 문제는 해결된 것으로 보고 본 작업 재개.**
+- **현재 안정 구성(유지할 것):** 램 78B 하나를 B1에, A1 비움, C91은 빼서 보관(16GB). 바이오스 3202, VCCSA 1.15V, DRAM 1.25V, CPU 전력 제한은 바이오스 기본값. HWiNFO 8.60 설치됨(센서만 모드, 기록은 수동).
+- 근본 원인(A1 자리=보드 쪽 가능성 큼)은 남아 있음. 다시 꺼지면 이 기록부터 보고, 32GB 한 개짜리 램(B1) 또는 보드·CPU 교체를 검토(구매는 사장님이 보류 중).
 
 ## 다음 순서 (전압으로 안 고쳐지면)
 1. A1 슬롯 먼지·휜 핀 확인, 바람으로 청소.
