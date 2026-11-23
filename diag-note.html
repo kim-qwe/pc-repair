@@ -1,0 +1,122 @@
+<title>PC 꺼짐 진단 노트</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+KR:wght@400;600;700&family=IBM+Plex+Mono:wght@400;600&display=swap">
+<style>
+/* 레이아웃: 한 줄 기둥, 위에서 아래로 "결론 → 지금 할 일 → 근거 → 다음" 순서. 회로 기판 느낌의 녹색 기운 중립색. */
+:root{
+  --bg:#f5f7f4; --surface:#ffffff; --fg:#17211b; --muted:#56635a; --line:#d5ddd6;
+  --accent:#1f7a52; --accent-soft:#e3f1e9; --bad:#b4362a; --bad-soft:#f8e5e2; --ok:#1f7a52;
+  --sans:"IBM Plex Sans KR",system-ui,"Malgun Gothic",sans-serif; --mono:"IBM Plex Mono",ui-monospace,Consolas,monospace;
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+  --bg:#111613; --surface:#18201b; --fg:#e4ece6; --muted:#9aa89f; --line:#2c3830;
+  --accent:#5cc394; --accent-soft:#1d3127; --bad:#f08a7c; --bad-soft:#3a201c; --ok:#5cc394; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#111613; --surface:#18201b; --fg:#e4ece6; --muted:#9aa89f; --line:#2c3830;
+  --accent:#5cc394; --accent-soft:#1d3127; --bad:#f08a7c; --bad-soft:#3a201c; --ok:#5cc394; color-scheme:dark}
+body{background:var(--bg);color:var(--fg);font-family:var(--sans);font-size:16px;line-height:1.65;
+  padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:28px 56px}
+main{max-width:720px;margin:0 auto;display:flex;flex-direction:column;gap:28px}
+h1{font-size:1.6rem;line-height:1.3;margin:0;text-wrap:balance}
+h2{font-size:1.15rem;margin:0 0 10px;text-wrap:balance}
+p{margin:0}
+.meta{color:var(--muted);font-size:.85rem;font-family:var(--mono)}
+.verdict{background:var(--accent-soft);border-left:4px solid var(--accent);padding:16px 18px;border-radius:6px;display:flex;flex-direction:column;gap:8px}
+.verdict strong{font-size:1.1rem}
+section{display:flex;flex-direction:column;gap:10px}
+ol,ul{margin:0;padding-left:1.3em;display:flex;flex-direction:column;gap:6px}
+.tablewrap{overflow-x:auto;border:1px solid var(--line);border-radius:6px;background:var(--surface)}
+table{border-collapse:collapse;width:100%;font-size:.93rem;font-variant-numeric:tabular-nums}
+th,td{text-align:left;padding:9px 12px;border-bottom:1px solid var(--line);vertical-align:top}
+tr:last-child td{border-bottom:none}
+th{color:var(--muted);font-weight:600;font-size:.8rem;letter-spacing:.04em}
+.pill{display:inline-block;font-size:.8rem;font-weight:600;padding:1px 9px;border-radius:999px;white-space:nowrap}
+.pill.ok{background:var(--accent-soft);color:var(--ok)}
+.pill.bad{background:var(--bad-soft);color:var(--bad)}
+code,.mono{font-family:var(--mono);font-size:.9em}
+.slot{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+.slot div{background:var(--surface);border:1px solid var(--line);border-radius:6px;padding:12px}
+.slot .label{font-family:var(--mono);font-size:.8rem;color:var(--muted);letter-spacing:.04em}
+.slot .bad{border-color:var(--bad)}
+.note{color:var(--muted);font-size:.9rem}
+</style>
+
+<main>
+  <header style="display:flex;flex-direction:column;gap:6px">
+    <h1>PC 꺼짐 진단 노트</h1>
+    <p class="meta">2026-11-23 19:55 기준 · i7-8700K · ASUS PRIME B360M-K · RTX 3080 · 삼성 DDR4 16GB×2</p>
+  </header>
+
+  <div class="verdict">
+    <strong>원인: 메인보드의 램 A1 자리(메모리 채널 A) 쪽</strong>
+    <p>같은 램(일련번호 끝 78B)이 B1 자리에서는 14판 동안 멀쩡했고, A1 자리에서는 8초 만에 꺼졌어요. 램, 파워, 그래픽 카드는 원인이 아니에요.</p>
+  </div>
+
+  <section>
+    <h2>지금 할 일: 바이오스 전압 조금 올리기</h2>
+    <p>램은 78B 하나만 <b>A1</b>에 꽂은 채로 해요. 그래야 전압만 바꾼 효과를 볼 수 있어요.</p>
+    <ol>
+      <li>다시 시작하고, ASUS 글자가 보일 때 <b>Delete</b>를 여러 번 누르세요.</li>
+      <li><b>F7</b>을 눌러 고급 화면(Advanced Mode)으로 가세요.</li>
+      <li><b>Ai Tweaker</b> 탭에서 다음 두 항목을 바꾸세요. Manual을 먼저 고르라고 하면 Manual을 고른 뒤 숫자를 넣으세요.</li>
+    </ol>
+    <div class="tablewrap"><table>
+      <thead><tr><th>항목</th><th>지금 (Auto)</th><th>바꿀 값</th></tr></thead>
+      <tbody>
+        <tr><td>CPU System Agent Voltage (VCCSA)</td><td class="mono">약 1.05V</td><td class="mono"><b>1.15</b></td></tr>
+        <tr><td>CPU VCCIO Voltage</td><td class="mono">약 0.95V</td><td class="mono"><b>1.10</b></td></tr>
+      </tbody>
+    </table></div>
+    <ol start="4">
+      <li><b>F10 → OK</b>로 저장하고 나가세요.</li>
+      <li>Windows에 로그인한 뒤 Claude 세션에 "바꾸고 켰어"라고 알려 주세요. 같은 시험으로 고쳐졌는지 확인해요.</li>
+    </ol>
+    <p class="note">메뉴가 안 보이면 Ai Tweaker 화면 사진을 찍어 두세요. 이 보드(B360)는 전압 메뉴가 일부 빠져 있을 수 있어요.</p>
+  </section>
+
+  <section>
+    <h2>램 자리</h2>
+    <div class="slot">
+      <div class="bad"><div class="label">A1 · CPU에 가까운 쪽</div><p>문제 자리. 여기에 꽂으면 몇 초 만에 꺼짐.</p></div>
+      <div><div class="label">B1 · CPU에서 먼 쪽</div><p>거의 멀쩡. 당장 쓰려면 여기에 하나만.</p></div>
+    </div>
+  </section>
+
+  <section>
+    <h2>시험 결과</h2>
+    <p class="note">시험 = 블렌더 검사 6개를 동시에 돌리기. 고장 상태에서는 몇 초 만에 PC가 꺼져요.</p>
+    <div class="tablewrap"><table>
+      <thead><tr><th>꽂은 상태</th><th>결과</th></tr></thead>
+      <tbody>
+        <tr><td>78B 하나 · B1</td><td><span class="pill ok">14판 중 0번 꺼짐</span></td></tr>
+        <tr><td>C91 하나 · B1</td><td><span class="pill ok">28판 중 1번 꺼짐</span></td></tr>
+        <tr><td>둘 다 · A1 + B1</td><td><span class="pill bad">매번 몇 초 만에 꺼짐</span></td></tr>
+        <tr><td>둘 다 · 바이오스 3202로 올린 뒤</td><td><span class="pill bad">15초 만에 꺼짐</span></td></tr>
+        <tr><td>78B 하나 · <b>A1</b></td><td><span class="pill bad">8초 만에 꺼짐</span></td></tr>
+      </tbody>
+    </table></div>
+  </section>
+
+  <section>
+    <h2>원인이 아닌 것으로 확인된 것</h2>
+    <ul>
+      <li>파워: 11-22에 새 1000W로 바꿨는데도 꺼졌어요.</li>
+      <li>그래픽 카드: 꺼질 때마다 쉬는 중(17W)이었어요. 연결이 x4일 때도 B1 시험은 멀쩡했어요.</li>
+      <li>램 칩: Windows 메모리 진단 47분 동안 오류가 없었어요.</li>
+      <li>바이오스 판: 최신 3202로 올려도 꺼졌어요.</li>
+      <li>CPU만, 그래픽 카드만, 램만 세게 쓰는 시험: 모두 안 꺼졌어요.</li>
+    </ul>
+  </section>
+
+  <section>
+    <h2>전압으로 안 고쳐지면</h2>
+    <ol>
+      <li>A1 슬롯 안에 먼지나 휜 핀이 있는지 손전등으로 보고, 바람으로 불어 내요.</li>
+      <li>CPU 쿨러 나사 네 개가 고르게, 너무 세지 않게 조여 있는지 봐요. 한쪽만 세면 한 채널만 불안정해질 수 있어요.</li>
+      <li>그래도 안 되면 메인보드 교체를 측정값과 리뷰로 비교해서 골라요.</li>
+      <li>그동안은 램 하나를 <b>B1</b>에만 꽂고 쓰면 안정적이에요(16GB, 속도는 조금 느려짐).</li>
+    </ol>
+  </section>
+
+  <p class="note">본 작업(항해 게임)은 원인을 고칠 때까지 멈춰 있어요. 자세한 기록: <code>C:\dev\jobs\crashlog</code></p>
+</main>
